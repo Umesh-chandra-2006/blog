@@ -60,7 +60,7 @@ delete authorApp.delete("/articles/:articleId",verifyToken, checkRole("AUTHOR"),
     let {articleId} = req.params;
     let article = await ArticleModel.findOneAndUpdate(
         {author:req.user.id, _id: articleId},
-        {$set: {isActive: false}},{new:true});
+        {$set: {isArticleActive: false}},{new:true});
     if(!article){
         return res.status(404).json({message:"Article Not Found"});
     }
