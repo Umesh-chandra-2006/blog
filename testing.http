@@ -1,15 +1,16 @@
-POST http://localhost:3000/user-api/register/users
+POST http://localhost:3000/common-api/register
 Content-Type: application/json
 
 {
-    "firstName":"Joe",
-    "lastName":"Joe",
-    "email":"joe@gmail.com",
-    "password":"admin123" 
+    "firstName":"Agent",
+    "lastName":"47",
+    "email":"A47@gmail.com",
+    "password":"hitman",
+    "role":"user"
 }
 
 ###
-POST http://localhost:3000/user-api/login
+POST http://localhost:3000/common-api/login
 Content-Type: application/json
 
 {
@@ -31,7 +32,7 @@ Content-Type: application/json
 //--------------------USER API END--------------------
 
 ###
-POST http://localhost:3000/author-api/register/authors
+POST http://localhost:3000/common-api/register
 Content-Type: application/json
 
 {
@@ -39,10 +40,11 @@ Content-Type: application/json
     "lastName":"John",
     "email":"doejohn@gmail.com",
     "password":"password123",
+    "role":"author"
 }
 
 ###
-POST http://localhost:3000/author-api/authors/login
+POST http://localhost:3000/common-api/login
 Content-Type: application/json
 
 {
@@ -63,7 +65,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/author-api/articles
+GET http://localhost:3000/author-api/articles/myarticles
 
 ###
 PUT http://localhost:3000/author-api/articles/69842dfa5db940c83c8a8487
@@ -77,7 +79,7 @@ Content-Type: application/json
 //--------------------AUTHOR API END--------------------
 
 ###
-POST http://localhost:3000/admin-api/admins/login
+POST http://localhost:3000/common-api/login
 Content-Type: application/json
 
 {
@@ -89,9 +91,42 @@ Content-Type: application/json
 GET http://localhost:3000/admin-api/articles
 
 ###
-PUT http://localhost:3000/admin-api/users/69837f54a569982538f3aef1
+PUT http://localhost:3000/admin-api/users/698429fa4fa2e700bcba0a01
 Content-Type: application/json
 
 {
-    "isActive": false
+    "isActive": true
+}
+
+###
+PUT http://localhost:3000/admin-api/articles/69842dfa5db940c83c8a8487
+Content-Type: application/json
+
+{
+    "isArticleActive": true
+}
+
+
+//--------------------ADMIN API END--------------------
+
+###
+GET http://localhost:3000/common-api/logout
+
+###
+PUT http://localhost:3000/common-api/update-password
+Content-Type: application/json
+
+{
+    "oldPassword": "newpassword456",
+    "newPassword": "password123"
+}
+
+###
+PUT http://localhost:3000/common-api/forgot-password
+Content-Type: application/json
+
+{
+    "email": "johndoe@gmail.com",
+    "oldPassword": "newpassword456",
+    "newPassword": "password123"
 }

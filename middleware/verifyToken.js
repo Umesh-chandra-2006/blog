@@ -1,3 +1,4 @@
+import { UserModel } from "../models/user.js";
 import jwt from "jsonwebtoken";
 
 export function verifyToken(req, res, next) {
@@ -13,11 +14,17 @@ export function verifyToken(req, res, next) {
 }
 
 export function checkRole(requiredRole) {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     if (req.user.role !== requiredRole) {
       return res
         .status(403)
         .json({ message: "Access denied. Insufficient permissions." });
+    }
+    let user = await UserModel.findById(req.user.id);
+    if (!user.isActive) {
+      return res
+        .status(403)
+        .json({ message: "Access denied. User is blocked." });
     }
     next();
   };

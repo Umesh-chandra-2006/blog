@@ -2,6 +2,7 @@ import { UserModel } from "../models/user.js";
 import { hash, compare } from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+//register user
 export const register = async (userObj) => {
   const userDoc = new UserModel(userObj);
   await userDoc.validate();
@@ -12,11 +13,17 @@ export const register = async (userObj) => {
   return newUserObj;
 };
 
-export const authenticate = async ({ email, password, role }) => {
-  const user = await UserModel.findOne({ email: email, role: role });
+//login user
+export const login = async ({ email, password }) => {
+  const user = await UserModel.findOne({ email: email });
   if (!user) {
-    const err = new Error("Invalid email or role");
+    const err = new Error("Invalid email");
     err.status = 401;
+    throw err;
+  }
+  if(user.isActive === false){
+    const err = new Error("User is blocked. Please contact admin.");
+    err.status = 403;
     throw err;
   }
   const isMatch = await compare(password, user.password);
@@ -26,9 +33,29 @@ export const authenticate = async ({ email, password, role }) => {
     throw err;
   }
   let token = jwt.sign(
-    { id: user._id, role: role },
+    { id: user._id, role: user.role },
     process.env.JWT_SECRET_KEY,
     { expiresIn: "1h" },
   );
-  return token;
+  const newUserObj = user.toObject();
+  delete newUserObj.password;
+  return { token, user: newUserObj };
 };
+
+export const updatePassword = async({email,oldPassword, newPassword}) => {
+  const user = await UserModel.findOne({ email: email });
+  if (!user) {
+    const err = new Error("Invalid email");
+    err.status = 401;
+    throw err;
+  }
+  const isMatch = await compare(oldPassword, user.password);
+  if(!isMatch) {
+    const err = new Error("Password is invalid");
+    err.status = 401;
+    throw err;
+  }
+  user.password= await hash(newPassword, 10);
+  await user.save();
+  return { message: "Password updated successfully" };
+}
