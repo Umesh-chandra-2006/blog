@@ -1,31 +1,24 @@
 import express from "express";
 import { ArticleModel } from "../models/article.js";
-import { verifyToken, checkRole } from "../middleware/verifyToken.js";
-import { register } from "../services/auth-service.js";
+import { verifyToken } from "../middleware/verifyToken.js";
 
 export const authorApp = express.Router();
 
 //create article
-authorApp.post(
-  "/articles",
-  verifyToken,
-  checkRole("AUTHOR"),
-  async (req, res) => {
-    let newArticle = req.body;
-    newArticle.author = req.user.id;
-    newArticle = new ArticleModel(newArticle);
-    await newArticle.save();
-    res
-      .status(201)
-      .json({ message: "Article Created Successfully", Payload: newArticle });
-  },
-);
+authorApp.post("/articles", verifyToken("AUTHOR"), async (req, res) => {
+  let newArticle = req.body;
+  newArticle.author = req.user.id;
+  newArticle = new ArticleModel(newArticle);
+  await newArticle.save();
+  res
+    .status(201)
+    .json({ message: "Article Created Successfully", Payload: newArticle });
+});
 
 //read articles of author
 authorApp.get(
   "/articles/myarticles",
-  verifyToken,
-  checkRole("AUTHOR"),
+  verifyToken("AUTHOR"),
   async (req, res) => {
     let articles = await ArticleModel.find({ author: req.user.id }).populate(
       "author",
@@ -38,8 +31,7 @@ authorApp.get(
 //edit article
 authorApp.put(
   "/articles/:articleId",
-  verifyToken,
-  checkRole("AUTHOR"),
+  verifyToken("AUTHOR"),
   async (req, res) => {
     let { articleId } = req.params;
     let newArticle = req.body;
@@ -63,22 +55,42 @@ authorApp.put(
 );
 
 //delete article(soft delete)
-authorApp.delete(
+authorApp.patch(
   "/articles/:articleId",
-  verifyToken,
-  checkRole("AUTHOR"),
+  verifyToken("AUTHOR"),
   async (req, res) => {
     let { articleId } = req.params;
-    let article = await ArticleModel.findOneAndUpdate(
-      { author: req.user.id, _id: articleId },
-      { $set: { isArticleActive: false } },
-      { new: true },
+    let { isArticleActive } = req.body;
+
+    let article = await ArticleModel.findById(articleId).select(
+      "isArticleActive author",
     );
+
+    if (!article) {
+      return res.status(404).json({ message: "Article Not Found" });
+    }
+
+    //only author can delete their own article
+    if (req.user.id !== article.author.toString()) {
+      return res
+        .status(403)
+        .json({ message: "Forbidden. Unauthorized Access." });
+    }
+
+    if (article.isArticleActive === isArticleActive) {
+      return res.status(400).json({
+        message: `Article is already ${isArticleActive ? "active" : "inactive"}`,
+      });
+    }
+    article.isArticleActive = isArticleActive;
+    await article.save();
+
+    
     if (!article) {
       return res.status(404).json({ message: "Article Not Found" });
     }
     res
       .status(200)
-      .json({ message: "Article Deleted Successfully", Payload: article });
+      .json({ message: "Article Updated Successfully", Payload: article });
   },
 );

@@ -1,7 +1,7 @@
 import express from "express";
 import { login, register, updatePassword } from "../services/auth-service.js";
-import { verifyToken } from "../middleware/verifyToken.js";
 import { UserModel } from "../models/user.js";
+import { verifyToken } from "../middleware/verifyToken.js";
 
 export const commonApp = express.Router();
 
@@ -52,10 +52,15 @@ commonApp.put("/forgot-password", async (req, res) => {
 });
 
 //updating password
-commonApp.put("/update-password", verifyToken, async (req, res) => {
+commonApp.put("/update-password", async (req, res) => {
   let { oldPassword, newPassword } = req.body;
   let userId = req.user.id;
   let { email } = await UserModel.findById(userId).select("email");
   let result = await updatePassword({ email, oldPassword, newPassword });
   res.status(200).json(result);
+});
+
+commonApp.get("/check-auth", verifyToken("USER","AUTHOR","ADMIN"), async(req, res) => {
+  let user = await UserModel.findById(req.user.id).select("-password");
+  res.status(200).json({ message: " Authenticated", payload: user });
 });

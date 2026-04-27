@@ -6,18 +6,37 @@ import { authorApp } from "./apis/authors.js";
 import { adminApp } from "./apis/admins.js";
 import { commonApp } from "./apis/commonApi.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 //load environment variables from .env file
 config();
 
+//validate environment variables
+const requiredEnvVars = ["MONGODB_URL", "PORT", "JWT_SECRET_KEY"];
+const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
+if (missingEnvVars.length > 0) {
+  console.error(
+    `Missing required environment variables: ${missingEnvVars.join(", ")}`,
+  );
+  process.exit(1);
+}
+
 //create express app
 const app = express();
+
+//use cors middleware
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+    credentials: true,
+    //allow requests from this origin
+  }),
+);
 
 //add body parser middleware to parse JSON data from incoming requests
 app.use(express.json());
 //add cookie parser middleware to parse cookies from incoming requests
 app.use(cookieParser());
-
 
 //add routes
 app.use("/user-api", userApp);
@@ -41,11 +60,32 @@ const connectToDB = async () => {
 connectToDB();
 
 //handle invalid paths
-app.use((req,res,next) =>{
-  res.json({message: `${req.url} is Invalid path`}); //template literal `${req.url}` 
-})
+app.use((req, res, next) => {
+  res.json({ message: `${req.url} is Invalid path` }); //template literal `${req.url}`
+});
 
 //global error handler
-app.use((err, req, res, next) => { 
-  res.status(500).json({ message: "error", error: err.message });
+app.use((err, req, res, next) => {
+  // Mongoose validation error
+  if (err.name === "ValidationError") {
+    return res.status(400).json({
+      message: "Validation failed",
+      errors: err.errors,
+    });
+  }
+  // Invalid ObjectId
+  if (err.name === "CastError") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  // Duplicate key
+  if (err.code === 11000) {
+    return res.status(409).json({
+      message: "Duplicate field value",
+    });
+  }
+  res.status(500).json({
+    message: "Internal Server Error",
+  });
 });
