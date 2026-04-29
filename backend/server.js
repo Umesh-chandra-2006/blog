@@ -25,11 +25,15 @@ if (missingEnvVars.length > 0) {
 const app = express();
 
 //use cors middleware
+const allowedOrigins = process.env.ORIGIN 
+  ? process.env.ORIGIN.split(',').map(url => url.trim())
+  : ["http://localhost:5173"];
+
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: allowedOrigins,
     credentials: true,
-    //allow requests from this origin
+    //allow requests from these origins
   }),
 );
 
