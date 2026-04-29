@@ -10,10 +10,11 @@ commonApp.post("/login", async (req, res) => {
   let { email, password } = req.body;
   let { token, user } = await login({ email, password });
   if (!token) return res.status(401).json({ message: "Invalid credentials" });
+  const isProduction = process.env.NODE_ENV === "production";
   res.cookie("auth-token", token, {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   });
   res.status(200).json({ message: "Login Successful", payload: user });
 });
@@ -36,10 +37,11 @@ commonApp.post("/register", async (req, res) => {
 
 //logout user
 commonApp.get("/logout", (req, res) => {
+  const isProduction = process.env.NODE_ENV === "production";
   res.clearCookie("auth-token", {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   });
   res.status(200).json({ message: "Logout Successful" });
 });

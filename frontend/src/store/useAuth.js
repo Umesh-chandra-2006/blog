@@ -1,6 +1,7 @@
 import { create } from "zustand";
+import { axiosInstance, API_ENDPOINTS } from "../config/api";
 import axios from "axios";
-import { API_ENDPOINTS } from "../config/api";
+import { toast } from "react-hot-toast";
 
 export const useAuth = create((set) => ({
   currentUser: null,
@@ -13,9 +14,7 @@ export const useAuth = create((set) => ({
   login: async (userObj) => {
     set({ loading: true, error: null });
     try {
-      let response = await axios.post(API_ENDPOINTS.LOGIN, userObj, {
-        withCredentials: true,
-      });
+      let response = await axiosInstance.post(API_ENDPOINTS.LOGIN, userObj);
 
       let res = await response.data;
 
@@ -41,9 +40,7 @@ export const useAuth = create((set) => ({
   logout: async () => {
     try {
       set({ loading: true, error: null });
-      await axios.get(API_ENDPOINTS.LOGOUT, {
-        withCredentials: true,
-      });
+      await axiosInstance.get(API_ENDPOINTS.LOGOUT);
 
       set({
         loading: false,
@@ -64,9 +61,7 @@ export const useAuth = create((set) => ({
   checkAuth: async () => {
     try {
       set({ loading: true, error: null });
-      let response = await axios.get(API_ENDPOINTS.CHECK_AUTH, {
-        withCredentials: true,
-      });
+      let response = await axiosInstance.get(API_ENDPOINTS.CHECK_AUTH);
 
       let res = await response.data;
 

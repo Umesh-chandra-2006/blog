@@ -1,5 +1,13 @@
 // API Base URL Configuration
+import axios from "axios";
+
 export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+// Create axios instance with credentials enabled
+export const axiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  withCredentials: true, // Always send cookies with requests
+});
 
 // API Endpoints
 export const API_ENDPOINTS = {
