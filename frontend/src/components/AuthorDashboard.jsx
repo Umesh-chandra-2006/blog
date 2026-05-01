@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import { API_ENDPOINTS } from "../config/api";
 import { toast } from "react-hot-toast";
+import { calculateReadingTime, formatDate, getExcerpt, getCategoryColor } from "../utils/articleHelpers";
 
 function AuthorDashboard() {
   const currentUser = useAuth((state) => state.currentUser);

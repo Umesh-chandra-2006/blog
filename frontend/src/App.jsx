@@ -10,6 +10,12 @@ import UserProfile from "./components/UserProfile";
 import ArticleCard from "./components/ArticleCard";
 import AddArticle from "./components/AddArticle";
 import EditArticle from "./components/EditArticle";
+import NotFound from "./components/NotFound";
+import About from "./components/About";
+import Privacy from "./components/Privacy";
+import Terms from "./components/Terms";
+import Contact from "./components/Contact";
+import FAQ from "./components/FAQ";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -18,6 +24,7 @@ function App() {
     {
       path: "/",
       element: <RouteLayout />,
+      errorElement: <NotFound />,
       children: [
         {
           path: "",
@@ -30,6 +37,26 @@ function App() {
         {
           path: "login",
           element: <Login />,
+        },
+        {
+          path: "about",
+          element: <About />,
+        },
+        {
+          path: "contact",
+          element: <Contact />,
+        },
+        {
+          path: "faq",
+          element: <FAQ />,
+        },
+        {
+          path: "privacy",
+          element: <Privacy />,
+        },
+        {
+          path: "terms",
+          element: <Terms />,
         },
         {
           path: "user-dashboard",
@@ -86,6 +113,10 @@ function App() {
               <EditArticle />
             </ProtectedRoute>
           ),
+        },
+        {
+          path: "*",
+          element: <NotFound />,
         },
       ],
     },
