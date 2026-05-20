@@ -25,9 +25,10 @@ if (missingEnvVars.length > 0) {
 const app = express();
 
 //use cors middleware
-const allowedOrigins = process.env.ORIGIN 
-  ? process.env.ORIGIN.split(',').map(url => url.trim())
-  : ["http://localhost:5173", "blog-woad-eight-95.vercel.app"];
+const originEnv = process.env.ORIGIN || process.env.ALLOWED_ORIGINS;
+const allowedOrigins = originEnv 
+  ? originEnv.split(',').map(url => url.trim())
+  : ["http://localhost:5173", "https://blog-woad-eight-95.vercel.app", "https://www.blog-woad-eight-95.vercel.app"];
 
 app.use(
   cors({
