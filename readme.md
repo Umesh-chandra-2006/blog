@@ -2,7 +2,7 @@
 
 A full-stack blog application built with MongoDB, Express.js, React, and Node.js featuring role-based access control, article management, and commenting system.
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Node.js v14+
@@ -39,7 +39,7 @@ npm run dev
 
 The frontend will run on `http://localhost:5173`
 
-## 📋 Features
+##  Features
 
 ### User Roles
 - **USER**: Browse articles and leave comments
@@ -56,7 +56,7 @@ The frontend will run on `http://localhost:5173`
 ✓ Error handling
 ✓ Loading states
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 Blog-App/
@@ -89,7 +89,7 @@ Blog-App/
 
 ```
 
-## 🔧 Configuration
+##  Configuration
 
 ### Backend (.env)
 ```env
@@ -107,13 +107,13 @@ CLOUDINARY_API_SECRET=your_api_secret
 VITE_API_URL=http://localhost:3000
 ```
 
-## 📚 Documentation
+## Documentation
 
 - **[Backend API Documentation](./backend/readme_api.md)** - Detailed API endpoints and setup
 - **[Frontend Documentation](./frontend/README_FRONTEND.md)** - React components and features
 - **[Deployment Checklist](./FINAL_REVIEW_CHECKLIST.md)** - Pre-deployment checklist
 
-## 🔐 Security Features
+##  Security Features
 
 - Password hashing with bcryptjs (10 rounds)
 - JWT token-based authentication (1 hour expiry)
@@ -122,7 +122,7 @@ VITE_API_URL=http://localhost:3000
 - Role-based middleware protection
 - Input validation and error handling
 
-## 🎯 API Endpoints Summary
+##  API Endpoints Summary
 
 ### Authentication
 - `POST /common-api/register` - Register user
@@ -145,7 +145,7 @@ VITE_API_URL=http://localhost:3000
 - `PUT /admin-api/users/:id` - Block/unblock user
 - `PUT /admin-api/articles/:id` - Activate/deactivate article
 
-## 🧪 Testing Checklist
+##  Testing Checklist
 
 Before pushing to production, test:
 
@@ -163,7 +163,7 @@ Before pushing to production, test:
 - [ ] Loading states
 - [ ] Responsive design
 
-## 🚢 Deployment
+##  Deployment
 
 1. **Prepare for deployment:**
    - Update environment variables for production
@@ -182,7 +182,7 @@ Before pushing to production, test:
    - **Frontend**: Vercel, Netlify, or GitHub Pages
    - **Backend**: Heroku, Railway, DigitalOcean, AWS EC2
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Cannot connect to MongoDB
 - Verify MongoDB is running
@@ -203,7 +203,7 @@ Before pushing to production, test:
 - Backend: Change PORT in .env
 - Frontend: Vite will use next available port
 
-## 📦 Dependencies
+##  Dependencies
 
 ### Backend
 - Express.js - Web framework
@@ -225,7 +225,7 @@ Before pushing to production, test:
 - Tailwind CSS - Styling
 - ESLint - Code linting
 
-## 📝 Code Style
+##  Code Style
 
 The project follows consistent code style:
 - **Naming**: camelCase for variables/functions, PascalCase for components
@@ -235,7 +235,7 @@ The project follows consistent code style:
 - **Styling**: Tailwind CSS utility classes
 - **Components**: Functional components with hooks
 
-## 🤝 Contributing
+##  Contributing
 
 When contributing:
 1. Follow existing code style
@@ -245,11 +245,11 @@ When contributing:
 5. Update documentation as needed
 6. Use meaningful commit messages
 
-## 📄 License
+##  License
 
 ISC
 
-## 📞 Support
+##  Support
 
 For issues or questions:
 1. Check the documentation files
@@ -261,4 +261,4 @@ For issues or questions:
 
 **Last Updated**: April 2026  
 **Version**: 1.0.0  
-**Status**: ✅ Production Ready
+**Status**:  Production Ready
