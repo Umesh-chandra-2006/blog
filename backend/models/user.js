@@ -23,9 +23,11 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      required: true,
-      enum: ["ADMIN", "AUTHOR", "USER"],
-      required: [true, "{value} is an Invalid role"],
+      required: [true, "Role is required"],
+      enum: {
+        values: ["ADMIN", "AUTHOR", "USER"],
+        message: "{VALUE} is not a valid role",
+      },
     },
     isActive: {
       type: Boolean,

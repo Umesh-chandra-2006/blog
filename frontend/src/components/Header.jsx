@@ -55,7 +55,7 @@ function Header() {
               <>
                 {currentUser.role === "AUTHOR" && (
                   <NavLink
-                    to="add-article"
+                    to="/add-article"
                     className={({ isActive }) =>
                       `text-sm font-medium transition-colors ${
                         isActive
@@ -71,10 +71,10 @@ function Header() {
                 <NavLink
                   to={
                     currentUser.role === "ADMIN"
-                      ? "admin-dashboard"
+                      ? "/admin-dashboard"
                       : currentUser.role === "AUTHOR"
-                        ? "author-dashboard"
-                        : "user-dashboard"
+                        ? "/author-dashboard"
+                        : "/user-dashboard"
                   }
                   className={({ isActive }) =>
                     `text-sm font-medium transition-colors ${
@@ -88,7 +88,7 @@ function Header() {
                 </NavLink>
 
                 <NavLink
-                  to="user-profile"
+                  to="/user-profile"
                   className={({ isActive }) =>
                     `flex items-center gap-2 ${
                       isActive ? "text-blue-600" : "text-gray-600 hover:text-gray-900"
@@ -117,7 +117,7 @@ function Header() {
             ) : (
               <>
                 <NavLink
-                  to="login"
+                  to="/login"
                   className={({ isActive }) =>
                     `text-sm font-medium transition-colors ${
                       isActive
@@ -129,7 +129,7 @@ function Header() {
                   Login
                 </NavLink>
                 <NavLink
-                  to="register"
+                  to="/register"
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                 >
                   Sign Up
@@ -189,7 +189,7 @@ function Header() {
               <>
                 {currentUser.role === "AUTHOR" && (
                   <NavLink
-                    to="add-article"
+                    to="/add-article"
                     className={({ isActive }) =>
                       `block px-4 py-2 text-sm font-medium ${
                         isActive
@@ -206,10 +206,10 @@ function Header() {
                 <NavLink
                   to={
                     currentUser.role === "ADMIN"
-                      ? "admin-dashboard"
+                      ? "/admin-dashboard"
                       : currentUser.role === "AUTHOR"
-                        ? "author-dashboard"
-                        : "user-dashboard"
+                        ? "/author-dashboard"
+                        : "/user-dashboard"
                   }
                   className={({ isActive }) =>
                     `block px-4 py-2 text-sm font-medium ${
@@ -224,7 +224,7 @@ function Header() {
                 </NavLink>
 
                 <NavLink
-                  to="user-profile"
+                  to="/user-profile"
                   className={({ isActive }) =>
                     `block px-4 py-2 text-sm font-medium ${
                       isActive
@@ -247,7 +247,7 @@ function Header() {
             ) : (
               <>
                 <NavLink
-                  to="login"
+                  to="/login"
                   className={({ isActive }) =>
                     `block px-4 py-2 text-sm font-medium ${
                       isActive
@@ -260,7 +260,7 @@ function Header() {
                   Login
                 </NavLink>
                 <NavLink
-                  to="register"
+                  to="/register"
                   className="block px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50"
                   onClick={() => setMobileMenuOpen(false)}
                 >

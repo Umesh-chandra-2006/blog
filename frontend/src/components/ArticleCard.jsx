@@ -165,14 +165,14 @@ function ArticleCard() {
                   <div key={comment._id} className="border-b border-gray-200 pb-6">
                     <div className="flex items-start gap-4">
                       <img
-                        src={comment.user.profileImageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.user._id}`}
-                        alt={comment.user.firstName}
+                        src={comment.user?.profileImageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.user?._id || comment._id}`}
+                        alt={comment.user?.firstName || "Deleted User"}
                         className="w-10 h-10 rounded-full flex-shrink-0"
                       />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
-                          <p className="font-semibold text-gray-900">{comment.user.firstName}</p>
-                          <p className="text-sm text-gray-500">{comment.user.email}</p>
+                          <p className="font-semibold text-gray-900">{comment.user?.firstName || "Deleted User"}</p>
+                          <p className="text-sm text-gray-500">{comment.user?.email || "N/A"}</p>
                         </div>
                         <p className="text-gray-700 leading-relaxed">{comment.comment}</p>
                       </div>

@@ -89,7 +89,8 @@ app.use((err, req, res, next) => {
       message: "Duplicate field value",
     });
   }
-  res.status(500).json({
-    message: "Internal Server Error",
-  });
+  
+  const statusCode = err.status || err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+  res.status(statusCode).json({ message });
 });

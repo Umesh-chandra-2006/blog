@@ -35,10 +35,10 @@ function Home() {
               <NavLink
                 to={
                   currentUser?.role === "ADMIN"
-                    ? "admin-dashboard"
+                    ? "/admin-dashboard"
                     : currentUser?.role === "AUTHOR"
-                      ? "author-dashboard"
-                      : "user-dashboard"
+                      ? "/author-dashboard"
+                      : "/user-dashboard"
                 }
                 className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
               >

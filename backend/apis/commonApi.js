@@ -54,12 +54,16 @@ commonApp.put("/forgot-password", async (req, res) => {
 });
 
 //updating password
-commonApp.put("/update-password", async (req, res) => {
-  let { oldPassword, newPassword } = req.body;
-  let userId = req.user.id;
-  let { email } = await UserModel.findById(userId).select("email");
-  let result = await updatePassword({ email, oldPassword, newPassword });
-  res.status(200).json(result);
+commonApp.put("/update-password", verifyToken("USER", "AUTHOR", "ADMIN"), async (req, res, next) => {
+  try {
+    let { oldPassword, newPassword } = req.body;
+    let userId = req.user.id;
+    let { email } = await UserModel.findById(userId).select("email");
+    let result = await updatePassword({ email, oldPassword, newPassword });
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
 });
 
 commonApp.get("/check-auth", verifyToken("USER","AUTHOR","ADMIN"), async(req, res) => {
