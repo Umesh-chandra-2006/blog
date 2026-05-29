@@ -1,8 +1,42 @@
-import { NavLink } from "react-router";
+import { useState, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router";
 import { useAuth } from "../store/useAuth";
+import axios from "axios";
+import { API_ENDPOINTS } from "../config/api";
+import { calculateReadingTime, formatDate, getExcerpt, getCategoryColor } from "../utils/articleHelpers";
 
 function Home() {
   const { isAuthenticated, currentUser } = useAuth();
+  const navigate = useNavigate();
+
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        setLoading(true);
+        setError(null);
+        let res = await axios.get(API_ENDPOINTS.USER_ARTICLES, {
+          withCredentials: true,
+        });
+        if (res.status === 200) {
+          setArticles(res.data.articles || []);
+        }
+      } catch (err) {
+        console.error("Error fetching articles:", err);
+        setError(err.response?.data?.message || "Failed to load articles.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchArticles();
+  }, []);
+
+  const handleArticleClick = (article) => {
+    navigate(`/articles/${article._id}`, { state: { article } });
+  };
 
   return (
     <div className="w-full">
@@ -47,6 +81,94 @@ function Home() {
             )}
           </div>
         </div>
+      </section>
+
+      {/* Latest Articles Section */}
+      <section className="py-16 px-4 max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 border-b border-gray-100 pb-5">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">
+              Latest Articles
+            </h2>
+            <p className="text-gray-600">
+              Browse the latest insights, stories, and ideas from our community.
+            </p>
+          </div>
+          {isAuthenticated && (
+            <NavLink
+              to={
+                currentUser?.role === "ADMIN"
+                  ? "/admin-dashboard"
+                  : currentUser?.role === "AUTHOR"
+                    ? "/author-dashboard"
+                    : "/user-dashboard"
+              }
+              className="mt-4 md:mt-0 text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1 group"
+            >
+              Go to your Dashboard <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </NavLink>
+          )}
+        </div>
+
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <div className="inline-block animate-spin rounded-full h-10 w-10 border-gray-300 border-t-2"></div>
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 max-w-2xl mx-auto text-center">
+            {error}
+          </div>
+        ) : articles.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {articles.slice(0, 6).map((article) => {
+              const readingTime = calculateReadingTime(article.content);
+              const publishDate = formatDate(article.createdAt);
+              return (
+                <article
+                  key={article._id}
+                  onClick={() => handleArticleClick(article)}
+                  className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer flex flex-col h-full group hover:-translate-y-1"
+                >
+                  <div className="p-6 flex-1 flex flex-col">
+                    {/* Category */}
+                    <div className="mb-4">
+                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getCategoryColor(article.category)}`}>
+                        {article.category}
+                      </span>
+                    </div>
+                    
+                    {/* Title */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                      {article.title}
+                    </h3>
+                    
+                    {/* Excerpt */}
+                    <p className="text-gray-600 mb-6 text-sm line-clamp-3 leading-relaxed flex-1">
+                      {getExcerpt(article.content, 130)}
+                    </p>
+
+                    {/* Meta info */}
+                    <div className="flex items-center gap-3 pt-4 border-t border-gray-100 mt-auto">
+                      <img
+                        src={article.author?.profileImageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${article.author?._id || 'author'}`}
+                        alt={article.author?.firstName || "Author"}
+                        className="w-8 h-8 rounded-full border border-gray-200"
+                      />
+                      <div className="text-xs">
+                        <p className="font-semibold text-gray-900">{article.author?.firstName || "Anonymous"}</p>
+                        <p className="text-gray-500">{publishDate} • {readingTime} min read</p>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-20 bg-gray-50 border border-gray-200 rounded-xl">
+            <p className="text-gray-600">No articles available. Check back later!</p>
+          </div>
+        )}
       </section>
 
       {/* Features Section */}

@@ -4,13 +4,34 @@ import { verifyToken } from "../middleware/verifyToken.js";
 
 export const userApp = express.Router();
 
-//read all articles
-userApp.get("/articles", verifyToken("USER"), async (req, res) => {
-  let articles = await ArticleModel.find({ isArticleActive: true }).populate(
-    "author comments.user",
-    "firstName email",
-  );
-  res.status(200).json({ message: "All Articles", articles: articles });
+//read all articles (Public)
+userApp.get("/articles", async (req, res, next) => {
+  try {
+    let articles = await ArticleModel.find({ isArticleActive: true }).populate(
+      "author comments.user",
+      "firstName email profileImageUrl",
+    );
+    res.status(200).json({ message: "All Articles", articles: articles });
+  } catch (err) {
+    next(err);
+  }
+});
+
+//read single article by ID (Public)
+userApp.get("/articles/:articleId", async (req, res, next) => {
+  try {
+    let { articleId } = req.params;
+    let article = await ArticleModel.findOne({ _id: articleId, isArticleActive: true }).populate(
+      "author comments.user",
+      "firstName email profileImageUrl",
+    );
+    if (!article) {
+      return res.status(404).json({ message: "Article not found" });
+    }
+    res.status(200).json({ message: "Article found", article: article });
+  } catch (err) {
+    next(err);
+  }
 });
 
 //add comment to an article

@@ -1,18 +1,39 @@
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useAuth } from "../store/useAuth";
 import { API_ENDPOINTS } from "../config/api";
 import { toast } from "react-hot-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { calculateReadingTime, formatDate, getCategoryColor } from "../utils/articleHelpers";
 
 function ArticleCard() {
+  const { articleId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
 
   const currentUser = useAuth().currentUser;
   const [loading, setLoading] = useState(false);
   const [article, setArticle] = useState(state?.article);
+  const [loadingArticle, setLoadingArticle] = useState(!article);
+  const [fetchError, setFetchError] = useState(null);
+
+  useEffect(() => {
+    async function fetchArticle() {
+      try {
+        setFetchError(null);
+        let res = await axios.get(API_ENDPOINTS.GET_ARTICLE(articleId));
+        if (res.status === 200) {
+          setArticle(res.data.article);
+        }
+      } catch (err) {
+        console.error("Error fetching article details:", err);
+        setFetchError(err.response?.data?.message || "Failed to load article details");
+      } finally {
+        setLoadingArticle(false);
+      }
+    }
+    fetchArticle();
+  }, [articleId]);
 
   const addComment = async (commentContent) => {
     try {
@@ -52,11 +73,22 @@ function ArticleCard() {
     }
   };
 
-  if (!state?.article) {
+  if (loadingArticle) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-gray-300 border-t-2"></div>
+          <p className="mt-4 text-gray-600">Loading article...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (fetchError || !article) {
     return (
       <div className="max-w-3xl mx-auto p-6">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-700 font-semibold">Article not found</p>
+          <p className="text-red-700 font-semibold">{fetchError || "Article not found"}</p>
         </div>
       </div>
     );

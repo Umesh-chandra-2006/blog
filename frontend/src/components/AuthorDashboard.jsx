@@ -41,7 +41,7 @@ function AuthorDashboard() {
   }, []);
 
   const gotoArticle = (articleObj) => {
-    navigate("/article", { state: { article: articleObj } });
+    navigate(`/articles/${articleObj._id}`, { state: { article: articleObj } });
   };
 
   const handleEditArticle = (articleObj) => {

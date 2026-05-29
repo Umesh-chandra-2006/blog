@@ -91,12 +91,8 @@ function App() {
           ),
         },
         {
-          path: "article",
-          element: (
-            <ProtectedRoute>
-              <ArticleCard />
-            </ProtectedRoute>
-          ),
+          path: "articles/:articleId",
+          element: <ArticleCard />,
         },
         {
           path: "add-article",

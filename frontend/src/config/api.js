@@ -21,6 +21,7 @@ export const API_ENDPOINTS = {
 
   // User APIs
   USER_ARTICLES: `${API_BASE_URL}/user-api/articles`,
+  GET_ARTICLE: (articleId) => `${API_BASE_URL}/user-api/articles/${articleId}`,
   ADD_COMMENT: (articleId) => `${API_BASE_URL}/user-api/comment/articleid/${articleId}`,
 
   // Author APIs
